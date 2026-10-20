@@ -25,6 +25,7 @@ Son **las mismas imágenes** que usa `docker compose`: no hay builds específico
 | `flowtask-api` | `DATABASE_URL` | IP privada de la instancia de Cloud SQL |
 | `flowtask-api` | `PORT` | Inyectada por Cloud Run (`8080`); el contenedor la respeta |
 | `flowtask-web` | `API_UPSTREAM` | URL de invocación del servicio `flowtask-api` |
+| `flowtask-web` | `NGINX_RESOLVER` | `127.0.0.11` (DNS embebido de Docker); solo necesario en el emulador, ver [limitaciones](#limitaciones-del-emulador-encontradas) |
 
 Al arrancar, el contenedor de la API aplica las migraciones de Alembic y el seed sobre Cloud SQL.
 
