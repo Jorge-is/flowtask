@@ -26,3 +26,7 @@ select = [
   "RUF", # ruff-specific
 ]
 ignore = ["B008"] # Depends()/Query() en firmas es el patrón idiomático de FastAPI
+
+[tool.ruff.lint.isort]
+# La carpeta local alembic/ (migraciones) hace que ruff lo tome como first-party.
+known-third-party = ["alembic"]

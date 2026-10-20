@@ -25,6 +25,10 @@ def create_app() -> FastAPI:
     app.include_router(categories.router)
     app.include_router(tasks.router)
 
+    @app.get("/health", tags=["Sistema"], summary="Estado del servicio")
+    def health() -> dict[str, str]:
+        return {"status": "ok"}
+
     return app
 
 

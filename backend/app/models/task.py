@@ -30,6 +30,7 @@ class Task(Base):
             TaskStatus,
             name="task_status",
             native_enum=False,
+            create_constraint=True,
             values_callable=lambda statuses: [status.value for status in statuses],
             validate_strings=True,
         ),
