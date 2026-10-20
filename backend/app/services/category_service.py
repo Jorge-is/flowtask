@@ -1,11 +1,11 @@
 from collections.abc import Sequence
 
 from app.models import Category
-from app.repositories.category_repository import CategoryRepository
+from app.repositories.protocols import CategoryRepositoryProtocol
 
 
 class CategoryService:
-    def __init__(self, category_repository: CategoryRepository) -> None:
+    def __init__(self, category_repository: CategoryRepositoryProtocol) -> None:
         self._category_repository = category_repository
 
     def list_categories(self) -> Sequence[Category]:

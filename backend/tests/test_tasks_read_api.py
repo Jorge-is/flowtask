@@ -87,9 +87,7 @@ def test_list_tasks_rejects_limit_above_maximum(client: TestClient) -> None:
     assert response.status_code == 422
 
 
-def test_list_tasks_orders_by_nearest_due_date(
-    client: TestClient, create_task: CreateTask
-) -> None:
+def test_list_tasks_orders_by_nearest_due_date(client: TestClient, create_task: CreateTask) -> None:
     create_task(title="Lejana", due_date="2099-12-31")
     create_task(title="Cercana", due_date="2099-01-01")
 

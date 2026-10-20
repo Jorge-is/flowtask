@@ -20,9 +20,7 @@ def list_tasks(
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> Page[TaskRead]:
-    return service.list_tasks(
-        status=status, category_id=category_id, limit=limit, offset=offset
-    )
+    return service.list_tasks(status=status, category_id=category_id, limit=limit, offset=offset)
 
 
 @router.get(

@@ -34,9 +34,7 @@ def test_patch_task_can_change_category(
 ) -> None:
     task = create_task()
 
-    response = client.patch(
-        f"/tasks/{task['id']}", json={"category_id": category_ids["Urgente"]}
-    )
+    response = client.patch(f"/tasks/{task['id']}", json={"category_id": category_ids["Urgente"]})
 
     assert response.json()["category"]["name"] == "Urgente"
 

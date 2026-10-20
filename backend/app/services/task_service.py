@@ -1,7 +1,6 @@
 from app.core.exceptions import InvalidReferenceError, NotFoundError
 from app.models import Task, TaskStatus
-from app.repositories.category_repository import CategoryRepository
-from app.repositories.task_repository import TaskRepository
+from app.repositories.protocols import CategoryRepositoryProtocol, TaskRepositoryProtocol
 from app.schemas.pagination import Page
 from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 
@@ -12,8 +11,8 @@ CATEGORY_NOT_FOUND = "Categoría no encontrada"
 class TaskService:
     def __init__(
         self,
-        task_repository: TaskRepository,
-        category_repository: CategoryRepository,
+        task_repository: TaskRepositoryProtocol,
+        category_repository: CategoryRepositoryProtocol,
     ) -> None:
         self._task_repository = task_repository
         self._category_repository = category_repository
