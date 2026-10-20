@@ -1,0 +1,27 @@
+meta {
+  name: Listar tareas por estado
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/tasks?status=Pendiente
+  body: none
+  auth: none
+}
+
+params:query {
+  status: Pendiente
+}
+
+assert {
+  res.status: eq 200
+  res.body.total: gte 1
+}
+
+tests {
+  test("solo devuelve tareas pendientes", function () {
+    const statuses = res.getBody().items.map((task) => task.status);
+    expect(statuses.every((status) => status === "Pendiente")).to.equal(true);
+  });
+}

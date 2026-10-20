@@ -1,0 +1,10 @@
+meta {
+  name: Errores
+  seq: 3
+}
+
+script:pre-request {
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + 7);
+  bru.setVar("dueDate", dueDate.toISOString().slice(0, 10));
+}

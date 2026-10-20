@@ -1,0 +1,24 @@
+meta {
+  name: Crear con categoría inexistente (422)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Tarea huérfana",
+    "due_date": "{{dueDate}}",
+    "category_id": 99999
+  }
+}
+
+assert {
+  res.status: eq 422
+  res.body.detail: eq Categoría no encontrada
+}
