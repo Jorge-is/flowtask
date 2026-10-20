@@ -1,0 +1,149 @@
+:host {
+  display: block;
+}
+
+.task-card {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 0.875rem 0.75rem 0.875rem 0.875rem;
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--ft-radius-card);
+}
+
+// --- Bloque de fecha: el elemento protagonista de la tarjeta ---
+.due-date {
+  --urgency: var(--ft-urgency-later);
+  --urgency-bg: var(--ft-urgency-later-bg);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0.25rem;
+  border-radius: var(--ft-radius-control);
+  background: var(--urgency-bg);
+  color: var(--urgency);
+  line-height: 1;
+
+  &[data-urgency='overdue'] {
+    --urgency: var(--ft-urgency-overdue);
+    --urgency-bg: var(--ft-urgency-overdue-bg);
+  }
+  &[data-urgency='today'] {
+    --urgency: var(--ft-urgency-today);
+    --urgency-bg: var(--ft-urgency-today-bg);
+  }
+  &[data-urgency='soon'] {
+    --urgency: var(--ft-urgency-soon);
+    --urgency-bg: var(--ft-urgency-soon-bg);
+  }
+  &[data-urgency='done'] {
+    --urgency: var(--ft-urgency-done);
+    --urgency-bg: var(--ft-urgency-done-bg);
+  }
+}
+
+.due-date__day {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.due-date__month {
+  margin-top: 0.125rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.due-date__hint {
+  margin-top: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+// --- Contenido ---
+.task-card__body {
+  min-width: 0;
+}
+
+.task-card__title {
+  margin: 0.125rem 0 0;
+  font: var(--mat-sys-title-medium);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.task-card__description {
+  margin: 0.25rem 0 0;
+  color: var(--mat-sys-on-surface-variant);
+  max-width: 65ch;
+  overflow-wrap: anywhere;
+}
+
+.task-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.625rem;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+}
+
+.status {
+  font-weight: 600;
+
+  &[data-status='En Progreso'] {
+    color: var(--ft-urgency-soon);
+  }
+  &[data-status='Completada'] {
+    color: var(--ft-urgency-done);
+  }
+}
+
+// --- Acciones ---
+.task-card__actions {
+  display: flex;
+  align-items: center;
+}
+
+.complete-toggle--done {
+  color: var(--ft-urgency-done);
+}
+
+.delete-button:hover {
+  color: var(--ft-urgency-overdue);
+}
+
+.task-card--done .task-card__title {
+  color: var(--mat-sys-on-surface-variant);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+@media (max-width: 600px) {
+  .task-card {
+    grid-template-columns: 3.75rem 1fr;
+  }
+
+  .task-card__actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    margin-top: -0.5rem;
+  }
+}

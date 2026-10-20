@@ -1,0 +1,59 @@
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  color-scheme: light;
+  // Reserva el espacio del scrollbar: el layout no salta cuando la lista crece o se vacía.
+  scrollbar-gutter: stable;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$orange-palette,
+      ),
+      typography: 'IBM Plex Sans',
+      density: -1,
+    )
+  );
+}
+
+:root {
+  // Escala de urgencia de la fecha límite: el único acento de color de la interfaz.
+  --ft-urgency-overdue: #b42318;
+  --ft-urgency-overdue-bg: #fef3f2;
+  --ft-urgency-today: #b54708;
+  --ft-urgency-today-bg: #fffaeb;
+  --ft-urgency-soon: #175cd3;
+  --ft-urgency-soon-bg: #eff8ff;
+  --ft-urgency-later: #475467;
+  --ft-urgency-later-bg: #f2f4f7;
+  --ft-urgency-done: #067647;
+  --ft-urgency-done-bg: #ecfdf3;
+
+  --ft-radius-card: 12px;
+  --ft-radius-control: 8px;
+  --ft-content-width: 960px;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background-color: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

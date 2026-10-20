@@ -1,0 +1,91 @@
+.board {
+  max-width: var(--ft-content-width);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.board__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.board__title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.board__subtitle {
+  margin: 0.375rem 0 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.board__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.board__count {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+}
+
+// Reserva el alto de la barra para que la lista no salte al cargar.
+.board__progress {
+  height: 4px;
+  margin: 1rem 0 0.75rem;
+}
+
+.board__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  border: 1px dashed var(--mat-sys-outline-variant);
+  border-radius: var(--ft-radius-card);
+  background: var(--mat-sys-surface);
+
+  h2 {
+    margin: 0.75rem 0 0.25rem;
+    font: var(--mat-sys-title-medium);
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0 0 1.25rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.board__state-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 2.5rem;
+  color: var(--mat-sys-outline);
+}
+
+.board__paginator {
+  margin-top: 1rem;
+  background: transparent;
+}
+
+@media (max-width: 600px) {
+  .board {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .board__header button {
+    width: 100%;
+  }
+}

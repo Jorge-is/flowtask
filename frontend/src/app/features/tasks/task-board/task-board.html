@@ -1,0 +1,73 @@
+<main class="board">
+  <header class="board__header">
+    <div>
+      <h1 class="board__title">FlowTask</h1>
+      <p class="board__subtitle">Tareas del equipo ordenadas por fecha límite</p>
+    </div>
+    <button mat-flat-button type="button" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Nueva tarea
+    </button>
+  </header>
+
+  <section class="board__toolbar">
+    <app-filter-bar
+      [filters]="store.filters()"
+      [categories]="categories()"
+      (statusChange)="store.setStatusFilter($event)"
+      (categoryChange)="store.setCategoryFilter($event)"
+      (clear)="store.clearFilters()"
+    />
+    @if (!store.loadFailed()) {
+      <p class="board__count" aria-live="polite">
+        {{ store.total() }} {{ store.total() === 1 ? 'tarea' : 'tareas' }}
+      </p>
+    }
+  </section>
+
+  <div class="board__progress">
+    @if (store.loading()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Cargando tareas" />
+    }
+  </div>
+
+  @if (store.loadFailed()) {
+    <section class="board__state" role="alert">
+      <mat-icon class="board__state-icon" aria-hidden="true">cloud_off</mat-icon>
+      <h2>No se pudieron cargar las tareas</h2>
+      <p>El servidor no respondió. Comprueba que la API esté en ejecución.</p>
+      <button mat-stroked-button type="button" (click)="store.load()">Reintentar</button>
+    </section>
+  } @else if (store.tasks().length === 0 && !store.loading()) {
+    <section class="board__state">
+      <mat-icon class="board__state-icon" aria-hidden="true">event_available</mat-icon>
+      @if (hasActiveFilters()) {
+        <h2>Ninguna tarea coincide con los filtros</h2>
+        <p>Prueba con otro estado o categoría.</p>
+        <button mat-stroked-button type="button" (click)="store.clearFilters()">
+          Quitar filtros
+        </button>
+      } @else {
+        <h2>Aún no hay tareas</h2>
+        <p>Crea la primera y asígnale una categoría y una fecha límite.</p>
+        <button mat-stroked-button type="button" (click)="openCreateDialog()">Crear tarea</button>
+      }
+    </section>
+  } @else {
+    <app-task-list
+      [tasks]="store.tasks()"
+      (statusChange)="onStatusChange($event)"
+      (deleteRequest)="confirmDelete($event)"
+    />
+    @if (store.total() > pageSizeOptions[0]) {
+      <mat-paginator
+        class="board__paginator"
+        [length]="store.total()"
+        [pageSize]="store.page().limit"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)"
+      />
+    }
+  }
+</main>
