@@ -10,7 +10,7 @@
       }
     </mat-form-field>
 
-    <mat-form-field class="task-form__full">
+    <mat-form-field class="task-form__full" subscriptSizing="dynamic">
       <mat-label>Descripción (opcional)</mat-label>
       <textarea
         matInput
@@ -52,7 +52,7 @@
       }
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field subscriptSizing="dynamic">
       <mat-label>Estado</mat-label>
       <mat-select formControlName="status">
         @for (status of statuses; track status) {
