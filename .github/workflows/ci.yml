@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend · Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Versión mínima soportada y versión usada en la imagen Docker.
+        python-version: ["3.10", "3.13"]
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Tests
+        run: pytest
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Formato
+        run: npx prettier --check "src/**/*.{ts,html,scss}"
+
+      - name: Tests
+        run: npx ng test --watch=false
+
+      - name: Build
+        run: npm run build
+
+  e2e:
+    name: E2E · Docker Compose + Bruno
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Levantar el stack
+        run: docker compose up --build --detach --wait --wait-timeout 180
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Colección Bruno a través del proxy de nginx
+        working-directory: bruno
+        run: npx --yes @usebruno/cli@4.2.1 run --env docker
+
+      - name: Logs del stack
+        if: failure()
+        run: docker compose logs
+
+      - name: Bajar el stack
+        if: always()
+        run: docker compose down --volumes
