@@ -16,6 +16,7 @@
       [categories]="categories()"
       (statusChange)="store.setStatusFilter($event)"
       (categoryChange)="store.setCategoryFilter($event)"
+      (clear)="store.clearFilters()"
     />
     @if (!store.loadFailed()) {
       <p class="board__count" aria-live="polite">

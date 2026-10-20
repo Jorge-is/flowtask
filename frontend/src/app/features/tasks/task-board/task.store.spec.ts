@@ -65,6 +65,22 @@ describe('TaskStore', () => {
     );
   });
 
+  it('limpiar filtros vuelve a "Todos" con una sola consulta desde la primera página', () => {
+    store.setStatusFilter('Pendiente');
+    store.setCategoryFilter(2);
+    store.setPage({ limit: 10, offset: 20 });
+    taskService.list.mockClear();
+
+    store.clearFilters();
+
+    expect(store.filters()).toEqual({ status: null, categoryId: null });
+    expect(taskService.list).toHaveBeenCalledTimes(1);
+    expect(taskService.list).toHaveBeenLastCalledWith(
+      { status: null, categoryId: null },
+      { limit: 10, offset: 0 },
+    );
+  });
+
   it('marca la carga como fallida si la API no responde', () => {
     taskService.list.mockReturnValue(throwError(() => new Error('offline')));
 
