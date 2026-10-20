@@ -5,7 +5,7 @@ from fastapi import APIRouter, Query, status
 from app.dependencies import TaskServiceDep
 from app.models import Task, TaskStatus
 from app.schemas.pagination import Page
-from app.schemas.task import TaskCreate, TaskRead
+from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 
 router = APIRouter(prefix="/tasks", tags=["Tareas"])
 
@@ -44,3 +44,23 @@ def get_task(task_id: int, service: TaskServiceDep) -> Task:
 )
 def create_task(data: TaskCreate, service: TaskServiceDep) -> Task:
     return service.create_task(data)
+
+
+@router.patch(
+    "/{task_id}",
+    response_model=TaskRead,
+    summary="Actualizar parcialmente una tarea",
+    responses=NOT_FOUND_RESPONSE,
+)
+def update_task(task_id: int, data: TaskUpdate, service: TaskServiceDep) -> Task:
+    return service.update_task(task_id, data)
+
+
+@router.delete(
+    "/{task_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Eliminar una tarea",
+    responses=NOT_FOUND_RESPONSE,
+)
+def delete_task(task_id: int, service: TaskServiceDep) -> None:
+    service.delete_task(task_id)

@@ -3,7 +3,7 @@ from app.models import Task, TaskStatus
 from app.repositories.category_repository import CategoryRepository
 from app.repositories.task_repository import TaskRepository
 from app.schemas.pagination import Page
-from app.schemas.task import TaskCreate, TaskRead
+from app.schemas.task import TaskCreate, TaskRead, TaskUpdate
 
 TASK_NOT_FOUND = "Tarea no encontrada"
 CATEGORY_NOT_FOUND = "Categoría no encontrada"
@@ -45,6 +45,19 @@ class TaskService:
     def create_task(self, data: TaskCreate) -> Task:
         self._ensure_category_exists(data.category_id)
         return self._task_repository.add(Task(**data.model_dump()))
+
+    def update_task(self, task_id: int, data: TaskUpdate) -> Task:
+        task = self.get_task(task_id)
+        changes = data.model_dump(exclude_unset=True)
+        if "category_id" in changes:
+            self._ensure_category_exists(changes["category_id"])
+        for field_name, value in changes.items():
+            setattr(task, field_name, value)
+        return self._task_repository.save(task)
+
+    def delete_task(self, task_id: int) -> None:
+        task = self.get_task(task_id)
+        self._task_repository.delete(task)
 
     def _ensure_category_exists(self, category_id: int) -> None:
         if self._category_repository.get_by_id(category_id) is None:
