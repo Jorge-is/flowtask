@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Nueva tarea</h2>
+<h2 mat-dialog-title>{{ isEdit ? 'Editar tarea' : 'Nueva tarea' }}</h2>
 
 <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
   <mat-dialog-content class="task-form">
@@ -37,11 +37,15 @@
         [matDatepicker]="picker"
         formControlName="dueDate"
         [min]="minDueDate"
+        [matDatepickerFilter]="isAllowedDueDate"
         placeholder="dd/mm/aaaa"
       />
       <mat-datepicker-toggle matIconSuffix [for]="picker" />
       <mat-datepicker #picker />
-      @if (form.controls.dueDate.hasError('matDatepickerMin')) {
+      @if (
+        form.controls.dueDate.hasError('matDatepickerMin') ||
+        form.controls.dueDate.hasError('matDatepickerFilter')
+      ) {
         <mat-error>La fecha no puede estar en el pasado.</mat-error>
       } @else {
         <mat-error>Elige una fecha válida.</mat-error>
@@ -60,6 +64,8 @@
 
   <mat-dialog-actions align="end">
     <button mat-button type="button" mat-dialog-close>Cancelar</button>
-    <button mat-flat-button type="submit">Crear tarea</button>
+    <button mat-flat-button type="submit">
+      {{ isEdit ? 'Guardar cambios' : 'Crear tarea' }}
+    </button>
   </mat-dialog-actions>
 </form>

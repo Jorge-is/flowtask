@@ -36,6 +36,7 @@ function urgencyLabel(urgency: DueDateUrgency, daysLeft: number): string {
 export class TaskCard {
   readonly task = input.required<Task>();
   readonly statusChange = output<TaskStatus>();
+  readonly editRequest = output<void>();
   readonly deleteRequest = output<void>();
 
   protected readonly statuses = TASK_STATUSES;

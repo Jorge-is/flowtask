@@ -18,6 +18,7 @@ export interface TaskStatusChange {
           <app-task-card
             [task]="task"
             (statusChange)="statusChange.emit({ task, status: $event })"
+            (editRequest)="editRequest.emit(task)"
             (deleteRequest)="deleteRequest.emit(task)"
           />
         </li>
@@ -38,5 +39,6 @@ export interface TaskStatusChange {
 export class TaskList {
   readonly tasks = input.required<Task[]>();
   readonly statusChange = output<TaskStatusChange>();
+  readonly editRequest = output<Task>();
   readonly deleteRequest = output<Task>();
 }

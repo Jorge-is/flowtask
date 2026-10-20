@@ -67,6 +67,16 @@ describe('TaskCard', () => {
     expect(emitted).toEqual(['Pendiente']);
   });
 
+  it('solicita la edición al pulsar editar', async () => {
+    const element = await render(task);
+    let requested = false;
+    fixture.componentInstance.editRequest.subscribe(() => (requested = true));
+
+    button(element, 'Editar tarea').click();
+
+    expect(requested).toBe(true);
+  });
+
   it('solicita la eliminación al pulsar eliminar', async () => {
     const element = await render(task);
     let requested = false;
