@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
-from app.routers import categories
+from app.core.error_handlers import register_error_handlers
+from app.routers import categories, tasks
 
 
 def create_app() -> FastAPI:
@@ -20,7 +21,9 @@ def create_app() -> FastAPI:
         allow_headers=["Content-Type"],
     )
 
+    register_error_handlers(app)
     app.include_router(categories.router)
+    app.include_router(tasks.router)
 
     return app
 
