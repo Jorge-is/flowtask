@@ -1,0 +1,23 @@
+meta {
+  name: Listar tareas paginado
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/tasks?limit=5&offset=0
+  body: none
+  auth: none
+}
+
+params:query {
+  limit: 5
+  offset: 0
+}
+
+assert {
+  res.status: eq 200
+  res.body.limit: eq 5
+  res.body.offset: eq 0
+  res.body.items.length: lte 5
+}

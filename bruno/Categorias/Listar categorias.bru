@@ -1,0 +1,27 @@
+meta {
+  name: Listar categorías
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/categories
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+script:post-response {
+  const trabajo = res.getBody().find((category) => category.name === "Trabajo");
+  bru.setVar("categoryId", trabajo.id);
+}
+
+tests {
+  test("incluye las categorías base del seed", function () {
+    const names = res.getBody().map((category) => category.name);
+    expect(names).to.include.members(["Trabajo", "Personal", "Urgente"]);
+  });
+}

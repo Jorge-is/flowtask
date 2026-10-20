@@ -1,0 +1,22 @@
+meta {
+  name: Completar tarea
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/tasks/{{taskId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "status": "Completada"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq Completada
+}

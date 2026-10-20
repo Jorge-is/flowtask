@@ -1,0 +1,16 @@
+meta {
+  name: Eliminar tarea inexistente (404)
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/tasks/99999
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+  res.body.detail: eq Tarea no encontrada
+}

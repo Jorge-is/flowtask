@@ -1,0 +1,11 @@
+meta {
+  name: Tareas
+  seq: 2
+}
+
+script:pre-request {
+  // Fecha límite válida: siempre 7 días en el futuro.
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + 7);
+  bru.setVar("dueDate", dueDate.toISOString().slice(0, 10));
+}
