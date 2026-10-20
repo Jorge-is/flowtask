@@ -16,9 +16,11 @@ FROM nginx:1.29-alpine
 
 # URL del backend a la que nginx reenvía /api. Se resuelve al arrancar el contenedor,
 # así la misma imagen sirve para docker compose y para Cloud Run.
-ENV API_UPSTREAM=http://backend:8000
+ENV API_UPSTREAM=http://backend:8000 \
+    NGINX_ENTRYPOINT_LOCAL_RESOLVERS=1
 
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --chmod=755 nginx/16-resolver.envsh /docker-entrypoint.d/16-resolver.envsh
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
 EXPOSE 8080

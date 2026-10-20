@@ -8,9 +8,14 @@ server {
     gzip on;
     gzip_types text/css application/javascript application/json image/svg+xml;
 
+    # DNS para resolver API_UPSTREAM (ver 16-resolver.envsh).
+    resolver ${NGINX_RESOLVER} valid=10s ipv6=off;
+
     # Reverse proxy: el navegador ve un solo origen, así que no hay CORS de por medio.
-    location /api/ {
-        proxy_pass ${API_UPSTREAM}/;
+    # Al usar variables en proxy_pass, nginx resuelve el host en cada request en lugar de
+    # hacerlo una sola vez al arrancar: tolera un backend que aún no existe o cambia de IP.
+    location ~ ^/api/(.*)$ {
+        proxy_pass ${API_UPSTREAM}/$1$is_args$args;
         proxy_set_header Host $proxy_host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;

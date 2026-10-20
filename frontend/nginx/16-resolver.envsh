@@ -1,0 +1,5 @@
+#!/bin/sh
+# DNS que usa nginx para resolver API_UPSTREAM en cada request.
+# Por defecto, el del sistema (calculado por 15-local-resolvers.envsh a partir de /etc/resolv.conf).
+# Se puede fijar con NGINX_RESOLVER cuando la red del contenedor se conecta después del arranque.
+export NGINX_RESOLVER="${NGINX_RESOLVER:-$NGINX_LOCAL_RESOLVERS}"
