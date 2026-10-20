@@ -1,0 +1,23 @@
+# Emulador local de Google Cloud (floci-gcp): https://github.com/floci-io/floci-gcp
+# Cloud Run y Cloud SQL crean contenedores reales, por eso necesita el socket de Docker.
+name: flowtask-gcp
+
+services:
+  floci-gcp:
+    image: floci/floci-gcp:0.11.0
+    ports:
+      - "4588:4588"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Los contenedores de Cloud Run y Cloud SQL se crean en esta red, junto al emulador,
+      # para que el DNS embebido resuelva las URLs *.localhost.floci.io entre servicios.
+      FLOCI_GCP_SERVICES_DOCKER_NETWORK: flowtask-gcp
+    networks:
+      flowtask-gcp:
+        aliases:
+          - localhost.floci.io
+
+networks:
+  flowtask-gcp:
+    name: flowtask-gcp
