@@ -1,10 +1,38 @@
-from fastapi import APIRouter, status
+from typing import Annotated
+
+from fastapi import APIRouter, Query, status
 
 from app.dependencies import TaskServiceDep
-from app.models import Task
+from app.models import Task, TaskStatus
+from app.schemas.pagination import Page
 from app.schemas.task import TaskCreate, TaskRead
 
 router = APIRouter(prefix="/tasks", tags=["Tareas"])
+
+NOT_FOUND_RESPONSE = {404: {"description": "Tarea no encontrada"}}
+
+
+@router.get("", response_model=Page[TaskRead], summary="Listar tareas con filtros y paginación")
+def list_tasks(
+    service: TaskServiceDep,
+    status: TaskStatus | None = None,
+    category_id: Annotated[int | None, Query(gt=0)] = None,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> Page[TaskRead]:
+    return service.list_tasks(
+        status=status, category_id=category_id, limit=limit, offset=offset
+    )
+
+
+@router.get(
+    "/{task_id}",
+    response_model=TaskRead,
+    summary="Obtener una tarea",
+    responses=NOT_FOUND_RESPONSE,
+)
+def get_task(task_id: int, service: TaskServiceDep) -> Task:
+    return service.get_task(task_id)
 
 
 @router.post(
