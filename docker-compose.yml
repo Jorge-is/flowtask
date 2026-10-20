@@ -1,0 +1,38 @@
+name: flowtask
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-flowtask}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-flowtask}
+      POSTGRES_DB: ${POSTGRES_DB:-flowtask}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-flowtask}:${POSTGRES_PASSWORD:-flowtask}@db:5432/${POSTGRES_DB:-flowtask}
+      CORS_ORIGINS: '["http://localhost:4200","http://localhost:8080"]'
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  db-data:

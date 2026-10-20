@@ -1,3 +1,4 @@
+// Build de producción: nginx reenvía /api al backend (ver nginx/default.conf.template).
 export const environment = {
-  apiUrl: 'http://localhost:8000',
+  apiUrl: '/api',
 };
