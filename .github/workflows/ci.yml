@@ -12,10 +12,12 @@ concurrency:
 permissions:
   contents: read
 
+# Runner fijo: ubuntu-latest está migrando a Ubuntu 26 y no queremos cambios por debajo.
+
 jobs:
   backend:
     name: Backend · Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -46,7 +48,7 @@ jobs:
 
   frontend:
     name: Frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: frontend
@@ -73,7 +75,7 @@ jobs:
 
   e2e:
     name: E2E · Docker Compose + Bruno
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [backend, frontend]
     steps:
       - uses: actions/checkout@v7
