@@ -120,6 +120,36 @@ describe('TaskStore', () => {
     expect(taskService.list).toHaveBeenCalledTimes(1);
   });
 
+  it('al editar envía solo los campos modificados, avisa y recarga', () => {
+    store.load();
+    taskService.update.mockReturnValue(of(buildTask({ title: 'Informe final' })));
+    taskService.list.mockClear();
+
+    store.update(buildTask(), {
+      title: 'Informe final',
+      description: null,
+      status: 'Pendiente',
+      dueDate: '2026-10-23',
+      categoryId: 1,
+    });
+
+    expect(taskService.update).toHaveBeenCalledWith(1, { title: 'Informe final' });
+    expect(notifications.success).toHaveBeenCalledWith('Tarea actualizada');
+    expect(taskService.list).toHaveBeenCalledTimes(1);
+  });
+
+  it('al editar sin cambios no llama a la API', () => {
+    store.update(buildTask(), {
+      title: 'Preparar informe',
+      description: null,
+      status: 'Pendiente',
+      dueDate: '2026-10-23',
+      categoryId: 1,
+    });
+
+    expect(taskService.update).not.toHaveBeenCalled();
+  });
+
   it('elimina la tarea de la lista y avisa al usuario', () => {
     store.load();
     taskService.delete.mockReturnValue(of(undefined));

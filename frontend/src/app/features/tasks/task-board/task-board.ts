@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { catchError, filter, of } from 'rxjs';
+import { catchError, filter, Observable, of } from 'rxjs';
 
 import { CreateTaskPayload, Task } from '../../../core/models/task.model';
 import { CategoryService } from '../../../core/services/category.service';
@@ -64,17 +64,11 @@ export class TaskBoard implements OnInit {
   }
 
   protected openCreateDialog(): void {
-    this.dialog
-      .open<TaskForm, TaskFormData, CreateTaskPayload>(TaskForm, {
-        data: { categories: this.categories() },
-        // MatDialog vive en root: sin esto, el formulario no ve el DateAdapter de la ruta.
-        injector: this.injector,
-        width: '36rem',
-        maxWidth: 'calc(100vw - 2rem)',
-      })
-      .afterClosed()
-      .pipe(filter((payload): payload is CreateTaskPayload => payload !== undefined))
-      .subscribe((payload) => this.store.create(payload));
+    this.openTaskForm().subscribe((payload) => this.store.create(payload));
+  }
+
+  protected openEditDialog(task: Task): void {
+    this.openTaskForm(task).subscribe((payload) => this.store.update(task, payload));
   }
 
   protected confirmDelete(task: Task): void {
@@ -98,5 +92,19 @@ export class TaskBoard implements OnInit {
 
   protected onPageChange(event: PageEvent): void {
     this.store.setPage({ limit: event.pageSize, offset: event.pageIndex * event.pageSize });
+  }
+
+  /** Emite el payload solo si el usuario guarda; cancelar no emite nada. */
+  private openTaskForm(task?: Task): Observable<CreateTaskPayload> {
+    return this.dialog
+      .open<TaskForm, TaskFormData, CreateTaskPayload>(TaskForm, {
+        data: { categories: this.categories(), task },
+        // MatDialog vive en root: sin esto, el formulario no ve el DateAdapter de la ruta.
+        injector: this.injector,
+        width: '36rem',
+        maxWidth: 'calc(100vw - 2rem)',
+      })
+      .afterClosed()
+      .pipe(filter((payload): payload is CreateTaskPayload => payload !== undefined));
   }
 }

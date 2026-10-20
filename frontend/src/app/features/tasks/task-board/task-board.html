@@ -57,6 +57,7 @@
     <app-task-list
       [tasks]="store.tasks()"
       (statusChange)="onStatusChange($event)"
+      (editRequest)="openEditDialog($event)"
       (deleteRequest)="confirmDelete($event)"
     />
     @if (store.total() > pageSizeOptions[0]) {

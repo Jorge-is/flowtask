@@ -59,6 +59,16 @@
     <button
       mat-icon-button
       type="button"
+      aria-label="Editar tarea"
+      matTooltip="Editar"
+      (click)="editRequest.emit()"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      type="button"
       class="delete-button"
       aria-label="Eliminar tarea"
       matTooltip="Eliminar"

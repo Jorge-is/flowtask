@@ -6,6 +6,7 @@ import { PageRequest } from '../../../core/models/page.model';
 import { CreateTaskPayload, Task, TaskFilters, TaskStatus } from '../../../core/models/task.model';
 import { NotificationService } from '../../../core/services/notification.service';
 import { TaskService } from '../../../core/services/task.service';
+import { getTaskChanges } from '../../../core/utils/task-changes';
 
 interface TaskBoardState {
   tasks: Task[];
@@ -101,6 +102,18 @@ export class TaskStore {
       },
       // El interceptor ya avisó del error; aquí solo se revierte el cambio optimista.
       error: () => this.replaceTask(task),
+    });
+  }
+
+  update(task: Task, payload: CreateTaskPayload): void {
+    const changes = getTaskChanges(task, payload);
+    if (Object.keys(changes).length === 0) {
+      return;
+    }
+    this.taskService.update(task.id, changes).subscribe(() => {
+      this.notifications.success('Tarea actualizada');
+      // Recargar respeta el orden por fecha y los filtros activos, que la edición puede alterar.
+      this.load();
     });
   }
 
