@@ -1,0 +1,70 @@
+<article class="task-card" [class.task-card--done]="isDone()">
+  <time class="due-date" [attr.data-urgency]="urgency()" [attr.datetime]="task().dueDate">
+    <span class="due-date__day">{{ dueDate() | date: 'd' }}</span>
+    <span class="due-date__month">{{ dueDate() | date: 'MMM' }}</span>
+    @if (urgencyLabel()) {
+      <span class="due-date__hint">{{ urgencyLabel() }}</span>
+    }
+  </time>
+
+  <div class="task-card__body">
+    <h3 class="task-card__title">{{ task().title }}</h3>
+    @if (task().description) {
+      <p class="task-card__description">{{ task().description }}</p>
+    }
+    <div class="task-card__meta">
+      <span class="category">
+        <mat-icon aria-hidden="true">sell</mat-icon>
+        {{ task().category.name }}
+      </span>
+      <span class="status" [attr.data-status]="task().status">{{ task().status }}</span>
+    </div>
+  </div>
+
+  <div class="task-card__actions">
+    <button
+      mat-icon-button
+      type="button"
+      class="complete-toggle"
+      [class.complete-toggle--done]="isDone()"
+      [attr.aria-label]="isDone() ? 'Reabrir tarea' : 'Marcar como completada'"
+      [matTooltip]="isDone() ? 'Reabrir' : 'Completar'"
+      (click)="toggleCompleted()"
+    >
+      <mat-icon>{{ isDone() ? 'task_alt' : 'radio_button_unchecked' }}</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Cambiar estado"
+      matTooltip="Cambiar estado"
+      [matMenuTriggerFor]="statusMenu"
+    >
+      <mat-icon>swap_horiz</mat-icon>
+    </button>
+    <mat-menu #statusMenu="matMenu">
+      @for (status of statuses; track status) {
+        <button
+          mat-menu-item
+          type="button"
+          [disabled]="status === task().status"
+          (click)="statusChange.emit(status)"
+        >
+          {{ status }}
+        </button>
+      }
+    </mat-menu>
+
+    <button
+      mat-icon-button
+      type="button"
+      class="delete-button"
+      aria-label="Eliminar tarea"
+      matTooltip="Eliminar"
+      (click)="deleteRequest.emit()"
+    >
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </div>
+</article>

@@ -1,4 +1,4 @@
-import { getDueDateUrgency, parseIsoDate, toIsoDate } from './due-date';
+import { getDaysUntil, getDueDateUrgency, parseIsoDate, toIsoDate } from './due-date';
 
 describe('parseIsoDate', () => {
   it('interpreta la fecha en hora local, sin desfasarse un día por UTC', () => {
@@ -13,6 +13,13 @@ describe('parseIsoDate', () => {
 describe('toIsoDate', () => {
   it('formatea una fecha local como YYYY-MM-DD', () => {
     expect(toIsoDate(new Date(2026, 0, 5, 23, 30))).toBe('2026-01-05');
+  });
+});
+
+describe('getDaysUntil', () => {
+  it('cuenta días calendario sin importar la hora actual', () => {
+    expect(getDaysUntil('2026-10-23', new Date(2026, 9, 20, 23, 59))).toBe(3);
+    expect(getDaysUntil('2026-10-19', new Date(2026, 9, 20, 0, 1))).toBe(-1);
   });
 });
 

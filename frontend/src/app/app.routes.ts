@@ -4,8 +4,8 @@ export const routes: Routes = [
   {
     path: '',
     title: 'FlowTask · Tablero de tareas',
-    loadComponent: () =>
-      import('./features/tasks/task-board/task-board').then((module) => module.TaskBoard),
+    loadChildren: () =>
+      import('./features/tasks/tasks.routes').then((module) => module.TASKS_ROUTES),
   },
   { path: '**', redirectTo: '' },
 ];

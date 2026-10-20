@@ -20,6 +20,13 @@ export function toIsoDate(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
+/** Días calendario entre hoy y la fecha límite (negativo si ya venció). */
+export function getDaysUntil(dueDate: string, today: Date = new Date()): number {
+  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  // Math.round absorbe la hora de diferencia en los cambios de horario de verano.
+  return Math.round((parseIsoDate(dueDate).getTime() - startOfToday.getTime()) / MS_PER_DAY);
+}
+
 export function getDueDateUrgency(
   dueDate: string,
   status: TaskStatus,
@@ -28,8 +35,7 @@ export function getDueDateUrgency(
   if (status === 'Completada') {
     return 'done';
   }
-  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const daysLeft = Math.round((parseIsoDate(dueDate).getTime() - startOfToday.getTime()) / MS_PER_DAY);
+  const daysLeft = getDaysUntil(dueDate, today);
 
   if (daysLeft < 0) return 'overdue';
   if (daysLeft === 0) return 'today';

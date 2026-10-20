@@ -3,6 +3,8 @@
 html {
   height: 100%;
   color-scheme: light;
+  // Reserva el espacio del scrollbar: el layout no salta cuando la lista crece o se vacía.
+  scrollbar-gutter: stable;
   @include mat.theme(
     (
       color: (
