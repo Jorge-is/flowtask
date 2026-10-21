@@ -2,6 +2,9 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 1rem;
+  // El mensaje de error ocupa todo el espacio reservado bajo el campo: sin separación,
+  // queda pegado a la etiqueta flotante del campo siguiente.
+  row-gap: 0.75rem;
   padding-top: 0.5rem;
 }
 
